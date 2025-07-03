@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Courses - Tiger Martial Arts</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+  <img src="https://img.freepik.com/free-vector/martial-arts-logo-illustration_98292-2411.jpg" alt="Tiger Martial Arts Logo" class="logo">
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="classes.html">Classes</a>
+    <a href="membership.html">Membership</a>
+    <a href="courses.html">Courses</a>
+    <a href="instructors.html">Instructors</a>
+    <a href="timetable.html">Timetable</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+</header>
+
+
+  <section class="about-hero">
+    <div class="about-overlay">
+      <h1>Specialist Courses & Fitness</h1>
+      <p>Enhance your journey with our training programs and facilities.</p>
+    </div>
+  </section>
+
+  <section class="intro">
+    <table class="price-table">
+      <tr><th>Course / Service</th><th>Price</th></tr>
+      <tr><td>6-week beginners’ self-defence (2x1hr/week)</td><td>£180.00</td></tr>
+      <tr><td>Use of fitness room – per visit</td><td>£6.00</td></tr>
+      <tr><td>Personal fitness training – per hour</td><td>£35.00</td></tr>
+    </table>
+  </section>
+
+  <footer>
+    <p>© 2025 Tiger Martial Arts</p>
+  </footer>
+</body>
+</html>
