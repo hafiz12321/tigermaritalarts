@@ -1,1 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Class Booking - Tiger Martial Arts</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 2em;
+    }
 
+    .container {
+      max-width: 600px;
+      background: #fff;
+      margin: 0 auto;
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #222;
+      margin-bottom: 1.5em;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 1em 0 0.5em;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 0.7em;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin-bottom: 1em;
+      font-size: 1em;
+    }
+
+    .price-box {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 1em;
+      color: #005200;
+    }
+
+    button {
+      background-color: #ff6600;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #e55d00;
+    }
+
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 1em;
+      border-radius: 6px;
+      margin-top: 1em;
+      display: none;
+      text-align: center;
+    }
+
+    .home-btn {
+      background-color: #333;
+      margin-top: 1em;
+    }
+
+    .home-btn:hover {
+      background-color: #111;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Book Your Class</h1>
+
+    <label for="class-type">Choose Martial Art:</label>
+    <select id="class-type">
+      <option value="boxing">Boxing - $20/hour</option>
+      <option value="jiu-jitsu">Jiu Jitsu - $30/hour</option>
+      <option value="karate">Karate - $10/hour</option>
+    </select>
+
+    <label for="hours">Select Hours:</label>
+    <select id="hours">
+      <option value="1">1 hour</option>
+      <option value="2">2 hours</option>
+      <option value="3">3 hours</option>
+      <option value="4">4 hours</option>
+      <option value="5">5 hours</option>
+    </select>
+
+    <div class="price-box">
+      Total Price: $<span id="total">20</span>
+    </div>
+
+    <button onclick="submitBooking()">Confirm Booking</button>
+
+    <div class="success" id="confirmation">✅ Booking Confirmed!</div>
+
+    <button class="home-btn" onclick="goHome()">🏠 Back to Homepage</button>
+  </div>
+
+  <!-- Firebase Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+
+  <script>
+    // Firebase Config
+    var firebaseConfig = {
+      apiKey: "AIzaSyA7z5DtS7m9fl6IuaE0SqPSI1cmlF2pWpk",
+      authDomain: "unit-13-92da7.firebaseapp.com",
+      projectId: "unit-13-92da7",
+      storageBucket: "unit-13-92da7.appspot.com",
+      messagingSenderId: "973662416337",
+      appId: "1:973662416337:web:726009bdd3e03e908d44f0",
+      measurementId: "G-DZWG8J6F7W"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    // Redirect if not logged in
+    auth.onAuthStateChanged(function(user) {
+      if (!user) {
+        window.location.href = "contact.html";
+      }
+    });
+
+    // Price logic
+    const classPrices = {
+      "boxing": 20,
+      "jiu-jitsu": 30,
+      "karate": 10
+    };
+
+    const classSelect = document.getElementById('class-type');
+    const hoursSelect = document.getElementById('hours');
+    const totalDisplay = document.getElementById('total');
+
+    function updatePrice() {
+      const selectedClass = classSelect.value;
+      const hours = parseInt(hoursSelect.value);
+      const pricePerHour = classPrices[selectedClass];
+      const total = pricePerHour * hours;
+      totalDisplay.textContent = total;
+    }
+
+    classSelect.addEventListener('change', updatePrice);
+    hoursSelect.addEventListener('change', updatePrice);
+    window.addEventListener('load', updatePrice);
+
+    function submitBooking() {
+      const user = auth.currentUser;
+      if (!user) return;
+
+      const selectedClass = classSelect.value;
+      const hours = parseInt(hoursSelect.value);
+      const total = classPrices[selectedClass] * hours;
+
+      const bookingData = {
+        classType: selectedClass,
+        hours: hours,
+        totalCost: total,
+        timestamp: Date.now()
+      };
+
+      database.ref('bookings/' + user.uid).push(bookingData)
+        .then(() => {
+          document.getElementById('confirmation').style.display = 'block';
+        })
+        .catch(error => {
+          alert('Booking failed: ' + error.message);
+        });
+    }
+
+    function goHome() {
+      window.location.href = "index.html";
+    }
+  </script>
+
+</body>
+</html>
